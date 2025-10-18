@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tracka UF – Familjeappen för tryggare resor</title>
+  <meta name="description" content="Tracka – svensk familjeapp för tryggare resor. Live-position, valfria hastighetsgränser, geofencing, hemkommen-notiser, offline-loggning och SOS." />
+  <meta name="theme-color" content="#111827" />
+  <link rel="icon" href="/favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html{scroll-behavior:smooth}
+    .reveal{opacity:0;transform:translateY(16px);transition:opacity .5s, transform .5s}
+    .reveal.show{opacity:1;transform:none}
+    .blob{background:radial-gradient(42% 58% at 10% 10%, rgba(14,165,233,.18), transparent 60%),
+           radial-gradient(40% 50% at 90% 20%, rgba(59,130,246,.14), transparent 60%)}
+    .card{box-shadow:0 2px 8px rgba(2,6,23,.04), 0 12px 24px -12px rgba(2,6,23,.12)}
+    
+    /* Logga styling för header */
+    .header-logo {
+      height: 32px; /* Håller headerns storlek */
+      width: auto;
+      object-fit: contain;
+      transform: scale(3.8) translateX(-8px) /* Gör loggan större visuellt */
+    }
+
+        /* Notifikation styling */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-white text-slate-900">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-sm" style="border-bottom: 2px solid rgba(30, 41, 59, 0.7);">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
+      <!-- Logo med badge-stil -->
+      <a href="#" class="flex items-center gap-3" aria-label="Tracka startsida">
+        <div class="flex items-center gap-2">
+          <img src="tracka_img/tracka_uf_image.png" alt="Tracka UF" class="header-logo">
+        </div>
+        <div class="hidden rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700 md:inline-flex items-center gap-1">
+          <span class="h-1.5 w-1.5 rounded-full bg-cyan-500"></span>
+          UF • Sundsvall
+        </div>
+      </a>
+      
+      <!-- Navigation -->
+      <nav class="hidden items-center gap-4 md:flex">
+        <a href="#vad" class="text-slate-600 hover:text-slate-900 transition-colors">Om Tracka</a>
+        <span class="text-slate-400">•</span>
+        <a href="#funktioner" class="text-slate-600 hover:text-slate-900 transition-colors">Funktioner</a>
+        <span class="text-slate-400">•</span>
+        <a href="#team" class="text-slate-600 hover:text-slate-900 transition-colors">Team</a>
+        <span class="text-slate-400">•</span>
+        <a href="#partners" class="text-slate-600 hover:text-slate-900 transition-colors">Partners</a>
+        <span class="text-slate-400">•</span>
+        <a href="#kontakt" class="text-slate-600 hover:text-slate-900 transition-colors">Kontakt</a>
+      </nav>
+      
+      <!-- CTA-knapp -->
+      <a href="#kontakt" class="hidden rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 transition-colors md:inline-block">
+        Kom igång
+      </a>
+      
+      <!-- Mobilmeny-knapp -->
+      <button class="md:hidden rounded-lg p-2 text-slate-600 hover:bg-slate-100 transition-colors" aria-label="Meny">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO: enkel, blickfång + chips i ren text -->
+  <section class="relative overflow-hidden bg-slate-900 text-white">
+    <div class="absolute inset-0 blob opacity-90"></div>
+    <div class="relative mx-auto max-w-7xl px-4 py-24 md:py-32">
+      <div class="max-w-3xl">
+        <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/80 ring-1 ring-white/15">
+          <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 12 12">
+            <circle cx="6" cy="6" r="6"/>
+          </svg>
+          Familjetrygghet
+        </div>
+        <h1 class="text-4xl font-semibold leading-tight md:text-6xl">
+          Frihet för ungdomar.
+          <span class="bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text text-transparent">Trygghet för föräldrar</span>
+        </h1>
+        <p class="mt-4 text-lg text-white/85">
+          Tracka är en svensk app som hjälper familjer att hålla koll på var deras barn befinner sig.
+Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan föräldrar känna sig trygga – utan att inkräkta på ungdomarnas frihet.
+        </p>
+        
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a href="#funktioner" class="rounded-2xl bg-white px-6 py-3 font-medium text-slate-900 shadow hover:bg-slate-100 transition-colors">Se funktioner</a>
+          <a href="#kontakt" class="rounded-2xl bg-white/10 px-6 py-3 font-medium text-white ring-1 ring-white/20 hover:bg-white/15 transition-colors">Kom igång</a>
+        </div>
+        
+        <!-- Enkel text-rad istället för stora boxar -->
+        <p class="mt-8 text-sm text-white/70 flex items-center gap-3">
+          <span>Live-position</span>
+          <span class="text-white/40">•</span>
+          <span>Hastighetsgränser</span>
+          <span class="text-white/40">•</span>
+          <span>Geofencing</span>
+          <span class="text-white/40">•</span>
+          <span>Offline-funktion</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VAD ÄR TRACKA (kort, konkret) -->
+  <section id="vad" class="border-b border-slate-200 bg-white">
+    <div class="mx-auto max-w-7xl px-4 py-16">
+      <div class="grid gap-10 md:grid-cols-12">
+        <div class="reveal md:col-span-7">
+          <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700">
+            <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 12 12">
+              <circle cx="6" cy="6" r="6"/>
+            </svg>
+            Om Tracka
+          </div>
+          <h2 class="text-3xl font-bold">Vad är Tracka?</h2>
+          <p class="mt-4 text-lg text-slate-700">
+            En svensk familjeapp som ger enkel koll i vardagen: live-position och hastighet i realtid, notiser när barnet lämnar/kommer till platser du valt,
+            samt varningar om en valfri hastighetsgräns överskrids. Byggd för att skapa trygghet – med transparens och integritet.
+          </p>
+          <div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div class="flex items-center gap-3 rounded-lg bg-green-50 p-3">
+              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
+                <svg class="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-green-800">100% svensk utveckling</span>
+            </div>
+            <div class="flex items-center gap-3 rounded-lg bg-blue-50 p-3">
+              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
+                <svg class="h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-blue-800">GDPR-kompatibel</span>
+            </div>
+          </div>
+        </div>
+        <div class="reveal md:col-span-5">
+          <div class="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 p-6 shadow-sm mt-4 md:mt-12">
+
+            <h3 class="text-lg font-semibold">Passar fler än A-traktorer</h3>
+            <p class="mt-2 text-sm text-slate-700">
+              Tracka fungerar för gång, cykel, moped, mopedbil och A-traktor – eller när barnen går själva till kompisar, skola och träning.
+            </p>
+            <ul class="mt-4 space-y-2 text-sm text-slate-700">
+              <li class="flex items-center gap-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-cyan-500"></span>
+                Live-vy för föräldrar, tydlig status för ungdomar
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-cyan-500"></span>
+                Valfri hastighetsgräns per barn/fordon
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-cyan-500"></span>
+                Platser som Hem, Skola, Träning m.fl.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUNKTIONER: rent och tydligt (utan tunga boxar) -->
+    <section id="funktioner" class="border-b border-slate-200 bg-slate-50">
+    <div class="mx-auto max-w-7xl px-4 py-16">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700">
+        <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 12 12">
+          <circle cx="6" cy="6" r="6"/>
+        </svg>
+        Funktioner
+      </div>
+      <h2 class="reveal text-3xl font-bold">Trackas funktioner</h2>
+      <p class="reveal mt-2 max-w-3xl text-slate-700">Allt som behövs för tryggare resor – utan krångel.</p>
+
+      <div class="mt-8 grid gap-6 md:grid-cols-2">
+        <!-- Kärna -->
+        <div class="reveal rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
+            <svg class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold">Kärna</h3>
+          <ul class="mt-3 space-y-2 text-slate-700">
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+              Live-position & aktuell hastighet
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+              Egna hastighetsgränser med varningar
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+              Geofencing: Hem, Skola, Träning m.fl.
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+              Hemkommen-notis och lämnat-plats-notis
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+              Offline-loggning med autosynk
+            </li>
+          </ul>
+        </div>
+
+        <!-- Trygghet & Integritet -->
+        <div class="reveal rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-green-50">
+            <svg class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold">Trygghet & Integritet</h3>
+          <ul class="mt-3 space-y-2 text-slate-700">
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+              SOS-knapp med exakt position
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+              Tillfällig delningslänk vid behov
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+              Tydlig status & paus-läge för ungdomar
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+              Dataminimering och lagring inom EU
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+              Export och radering i appen
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- liten notisrad istället för stora "chips" -->
+      <p class="reveal mt-8 text-sm text-slate-600">
+        Batterismart uppdatering · iOS & Android · Familjekonton med flera profiler
+      </p>
+    </div>
+  </section>
+
+  <!-- TEAM (ni + kort UF-förklaring) -->
+  <section id="team" class="border-b border-slate-200 bg-white">
+    <div class="mx-auto max-w-7xl px-4 py-16">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700">
+        <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 12 12">
+          <circle cx="6" cy="6" r="6"/>
+        </svg>
+        Teamet
+      </div>
+      <h2 class="reveal text-3xl font-bold">Tracka Team</h2>
+      <p class="reveal mt-3 max-w-3xl text-slate-700">
+        Tracka UF drivs av två elever på Västermalm Gymnasium i Sundsvall inom Ung Företagsamhet (UF).
+        UF betyder att vi startar och driver ett riktigt företag under ett läsår – från idé till produkt och kunder.
+      </p>
+
+      <div class="mt-8 grid gap-6 md:grid-cols-2">
+        <div class="reveal rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
+          <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-50">
+            <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+            </svg>
+          </div>
+          <img class="mx-auto mb-3 h-20 w-20 rounded-full object-cover" src="tracka_img/leo_lemback.png" alt="Leo Lembäck"/>
+          <div class="font-semibold text-lg">Leo Lembäck</div>
+          <div class="text-sm text-slate-600 mb-3">Grundare • VD • Utvecklare</div>
+          <div class="flex items-center justify-center gap-2 text-xs text-slate-500">
+            <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+            Backend & Frontend utveckling
+          </div>
+        </div>
+        <div class="reveal rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
+          <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-purple-50">
+            <svg class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <img class="mx-auto mb-3 h-20 w-20 rounded-full object-cover" src="tracka_img/alfred_karlsson.png" alt="Alfred Karlsson"/>
+          <div class="font-semibold text-lg">Alfred Karlsson</div>
+          <div class="text-sm text-slate-600 mb-3">Medgrundare • Content & Video</div>
+          <div class="flex items-center justify-center gap-2 text-xs text-slate-500">
+            <span class="h-1.5 w-1.5 rounded-full bg-purple-500"></span>
+            Marketing & Videoproduktion
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNERS / SUPPORTERS (PNG-logogrid) -->
+  <section id="partners" class="border-b border-slate-200 bg-slate-50">
+    <div class="mx-auto max-w-7xl px-4 py-16">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700">
+        <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 12 12">
+          <circle cx="6" cy="6" r="6"/>
+        </svg>
+        Partners
+      </div>
+      <h2 class="reveal text-3xl font-bold">Supporters & samarbetspartners</h2>
+      <p class="reveal mt-2 max-w-3xl text-slate-700">Tack till er som stöttar vår resa under UF-året och gör Tracka möjligt.</p>
+
+      <!-- Partner-grid med vita kort -->
+      <div class="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        <a href="https://www.transistorsoft.com/" target="_blank" rel="noopener" class="reveal group">
+          <div class="rounded-2xl border border-slate-200 bg-slate-800/80 p-4 shadow-sm transition-shadow hover:shadow-md">
+            <img class="mx-auto h-16 w-auto object-contain" src="partners/partner1.png" alt="Partner 1">
+          </div>
+        </a>
+        <a href="https://partner2.se" target="_blank" rel="noopener" class="reveal group">
+          <div class="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm transition-shadow hover:shadow-md">
+            <img class="mx-auto h-16 w-auto object-contain grayscale transition-all group-hover:grayscale-0" src="partners/partner2.png" alt="Partner 2">
+          </div>
+        </a>
+        <a href="https://partner3.se" target="_blank" rel="noopener" class="reveal group">
+          <div class="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm transition-shadow hover:shadow-md">
+            <img class="mx-auto h-16 w-auto object-contain grayscale transition-all group-hover:grayscale-0" src="partners/partner3.png" alt="Partner 3">
+          </div>
+        </a>
+        <a href="https://partner4.se" target="_blank" rel="noopener" class="reveal group">
+          <div class="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm transition-shadow hover:shadow-md">
+            <img class="mx-auto h-16 w-auto object-contain grayscale transition-all group-hover:grayscale-0" src="partners/partner4.png" alt="Partner 4">
+          </div>
+        </a>
+        <a href="https://partner5.se" target="_blank" rel="noopener" class="reveal group">
+          <div class="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm transition-shadow hover:shadow-md">
+            <img class="mx-auto h-16 w-auto object-contain grayscale transition-all group-hover:grayscale-0" src="partners/partner5.png" alt="Partner 5">
+          </div>
+        </a>
+      </div>
+
+      <!-- Info-box längst ner -->
+      <div class="reveal mt-8 rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 p-6 shadow-sm">
+        <div class="flex items-start gap-4">
+          <div class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
+            <svg class="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg">Bli en av våra partners</h3>
+            <p class="mt-2 text-sm text-slate-700">
+              Vill din organisation stötta unga entreprenörer och samtidigt synas här? 
+              Hör av dig via kontaktformuläret nedan så berättar vi mer om samarbetsmöjligheter.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KONTAKT (oförändrad struktur, bara lätt puts) -->
+  <section id="kontakt" class="bg-white">
+    <div class="mx-auto max-w-7xl px-4 py-16">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700">
+        <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 12 12">
+          <circle cx="6" cy="6" r="6"/>
+        </svg>
+        Kontakt
+      </div>
+      <h2 class="reveal text-3xl font-bold">Kontakt & Samarbeten</h2>
+      <p class="reveal mt-2 max-w-3xl text-slate-700">Frågor eller vill du snacka pilot? Maila oss – vi svarar oftast inom 24 timmar.</p>
+
+      <div class="mt-8 grid gap-8 md:grid-cols-3">
+        <!-- Kontaktinfo som elegant kort -->
+        <div class="reveal rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 p-6 shadow-sm md:col-span-1">
+          <div class="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
+            <svg class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-lg mb-3">Hör av dig</h3>
+          <ul class="space-y-3 text-sm text-slate-700">
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+              E-post: <a class="font-medium text-sky-700 hover:underline" href="mailto:contact@tracka.se">contact@tracka.se</a>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+              Ort: Sundsvall, Sverige
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+              Svarstid: Inom 24 timmar
+            </li>
+          </ul>
+          
+          <!-- Social media länkar -->
+          <div class="mt-4 pt-4 border-t border-slate-200">
+            <p class="text-xs text-slate-600 mb-2">Följ oss:</p>
+            <div class="flex gap-3">
+              <a href="https://www.tiktok.com/@tracka_uf" target="_blank" rel="noopener" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white hover:bg-slate-100 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="16" height="16" fill="currentColor"><path d="M168.6 32v.3c0 18.6 15.1 33.7 33.7 33.7h.3v37.1c-12.3-1-24.1-4.5-34.9-10.1v52.9c0 37.6-30.5 68.1-68.1 68.1S32 183.5 32 145.9s30.5-68.1 68.1-68.1c5.6 0 11 0.7 16.2 2v38.6a33.8 33.8 0 00-16.2-4c-18.6 0-33.7 15.1-33.7 33.7 0 18.6 15.1 33.7 33.7 33.7s33.7-15.1 33.7-33.7V32h34.8z"/></svg>
+              </a>
+              <a href="https://www.instagram.com/tracka_uf/" target="_blank" rel="noopener" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white hover:bg-slate-100 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm10 2c1.654 0 3 1.346 3 3v10c0 1.654-1.346 3-3 3H7c-1.654 0-3-1.346-3-3V7c0-1.654 1.346-3 3-3h10zm-5 3a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6zm5.5-.75a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kontaktformulär -->
+        <form id="contactForm" class="reveal card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:col-span-2" action="https://formspree.io/f/xrbyjjdq" method="POST">
+          <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
+            <svg class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-lg mb-4">Skicka meddelande</h3>
+          
+          <div class="grid gap-4 md:grid-cols-2">
+            <label class="block"><span class="mb-1 block text-sm font-medium">Namn</span>
+              <input name="Namn" required type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" /></label>
+            <label class="block"><span class="mb-1 block text-sm font-medium">E-post</span>
+              <input name="Email" required type="email" class="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" /></label>
+            <label class="block"><span class="mb-1 block text-sm font-medium">Ämne</span>
+              <select name="Ämne" class="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+                <option>Samarbete</option>
+                <option>Fråga</option>
+                <option>Press/Media</option>
+              </select></label>
+            <label class="block"><span class="mb-1 block text-sm font-medium">Telefon (valfritt)</span>
+              <input name="Telefonnummer" type="tel" placeholder="+46…" class="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" /></label>
+            <label class="block md:col-span-2"><span class="mb-1 block text-sm font-medium">Meddelande</span>
+              <textarea name="Meddelande" rows="5" placeholder="Kort om ärendet" class="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" required></textarea></label>
+            <div class="md:col-span-2 flex items-start gap-2 text-sm text-slate-700">
+              <input id="gdprc" type="checkbox" required class="mt-1 h-4 w-4 rounded border-slate-300" />
+              <label for="gdprc">Jag godkänner att Tracka kontaktar mig i detta ärende.</label>
+            </div>
+          </div>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button type="submit" class="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white hover:bg-slate-800 transition-colors">Skicka meddelande</button>
+            <a href="mailto:contact@tracka.se" class="rounded-xl border border-slate-300 px-5 py-3 font-medium hover:bg-slate-50 transition-colors">Eller maila direkt</a>
+          </div>
+          <p class="mt-3 text-xs text-slate-500">Vi följer GDPR. Ingen data säljs eller delas.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER (oförändrad) -->
+  <footer class="border-t border-white/10 bg-[#1e293b] text-white">
+    <div class="mx-auto max-w-7xl grid gap-10 px-6 py-14 md:grid-cols-3">
+      <div>
+        <h3 class="text-lg font-semibold mb-3">Kontakt</h3>
+        <p class="text-sm text-white/85">Sundsvall, Sverige</p>
+        <p class="text-sm text-white/85">contact@tracka.se</p>
+        <div class="mt-4 flex gap-4">
+          <a aria-label="TikTok" href="https://www.tiktok.com/@tracka_uf" target="_blank" rel="noopener" class="hover:text-cyan-300" title="TikTok">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="22" height="22" fill="currentColor"><path d="M168.6 32v.3c0 18.6 15.1 33.7 33.7 33.7h.3v37.1c-12.3-1-24.1-4.5-34.9-10.1v52.9c0 37.6-30.5 68.1-68.1 68.1S32 183.5 32 145.9s30.5-68.1 68.1-68.1c5.6 0 11 0.7 16.2 2v38.6a33.8 33.8 0 00-16.2-4c-18.6 0-33.7 15.1-33.7 33.7 0 18.6 15.1 33.7 33.7 33.7s33.7-15.1 33.7-33.7V32h34.8z"/></svg>
+          </a>
+          <a aria-label="Instagram" href="https://www.instagram.com/tracka_uf/" target="_blank" rel="noopener" class="hover:text-cyan-300" title="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm10 2c1.654 0 3 1.346 3 3v10c0 1.654-1.346 3-3 3H7c-1.654 0-3-1.346-3-3V7c0-1.654 1.346-3 3-3h10zm-5 3a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6zm5.5-.75a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold mb-3">Snabblänkar</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#losning" class="hover:text-cyan-300">Lösningen</a></li>
+          <li><a href="#funktioner" class="hover:text-cyan-300">Funktioner</a></li>
+          <li><a href="#kontakt" class="hover:text-cyan-300">Kontakt</a></li>
+          <li><a href="#gdpr" class="hover:text-cyan-300">GDPR</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold mb-3">Om Tracka UF</h3>
+        <p class="text-sm text-white/80">UF‑företag vid Västermalm Gymnasium i Sundsvall. Vi bygger teknik för tryggare ungdomsresor – med enkelhet och integritet som grund.</p>
+      </div>
+    </div>
+    <div class="border-t border-white/10 py-4 text-center text-xs text-white/70">© <span id="year"></span> Tracka UF – Alla rättigheter förbehållna</div>
+  </footer>
+
+  <!-- Tom GDPR-ankare för länken i footern (om du vill lägga full policy separat) -->
+  <section id="gdpr" class="hidden"></section>
+
+  <script>
+    // årtal
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // reveal
+    const io = new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show')}),{threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+    // mjuk scroll under header
+    (function(){
+      const header = document.querySelector('header');
+      const headerH = ()=> header? header.getBoundingClientRect().height : 64;
+      document.querySelectorAll('a[href^="#"]').forEach(a=>{
+        a.addEventListener('click', (e)=>{
+          const href = a.getAttribute('href');
+          if(!href || href === '#') return;
+          const t = document.querySelector(href);
+          if(!t) return;
+          e.preventDefault();
+          const top = t.getBoundingClientRect().top + window.scrollY - headerH() - 8;
+          window.scrollTo({top, behavior:'smooth'});
+          history.pushState(null,'',href);
+        });
+      });
+    })();
+
+    // kontaktformulär med snygg notifikation
+    const cform=document.getElementById('contactForm');
+    cform?.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const submitBtn = cform.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      
+      // Visa loading state
+      submitBtn.textContent = 'Skickar...';
+      submitBtn.disabled = true;
+      
+      const data=new FormData(cform);
+      try{
+        const res=await fetch(cform.action,{method:'POST',body:data,headers:{'Accept':'application/json'}});
+        if(res.ok){ 
+          showNotification('✅ Meddelandet skickat!', 'Vi återkommer inom 24 timmar.', 'success');
+          cform.reset(); 
+        } else{ 
+          showNotification('⚠️ Kunde inte skicka', 'Försök igen eller maila oss direkt.', 'error');
+        }
+      }catch{ 
+        showNotification('⚠️ Nätverksfel', 'Kontrollera anslutningen och försök igen.', 'error');
+      } finally {
+        // Återställ knapp
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+
+    // Funktion för att visa notifikationer
+    function showNotification(title, message, type = 'success') {
+      // Ta bort eventuell befintlig notifikation
+      const existing = document.querySelector('.notification');
+      if (existing) existing.remove();
+      
+      // Skapa notifikation
+      const notification = document.createElement('div');
+      notification.className = `notification rounded-xl border p-4 shadow-lg max-w-sm ${
+        type === 'success' 
+          ? 'bg-green-50 border-green-200 text-green-800' 
+          : 'bg-red-50 border-red-200 text-red-800'
+      }`;
+      
+      notification.innerHTML = `
+        <div class="flex items-start gap-3">
+          <div class="flex-1">
+            <div class="font-semibold text-sm">${title}</div>
+            <div class="text-xs mt-1 opacity-90">${message}</div>
+          </div>
+          <button onclick="this.parentElement.parentElement.remove()" class="text-current opacity-60 hover:opacity-100 transition-opacity">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+          </button>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Animera in
+      setTimeout(() => notification.classList.add('show'), 10);
+      
+      // Auto-remove efter 5 sekunder
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
