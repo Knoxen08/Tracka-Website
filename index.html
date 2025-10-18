@@ -18,13 +18,33 @@
     
     /* Logga styling för header */
     .header-logo {
-      height: 32px; /* Håller headerns storlek */
+      height: 32px;
       width: auto;
       object-fit: contain;
-      transform: scale(3.8) translateX(-8px) /* Gör loggan större visuellt */
+      transform: scale(3.8) translateX(-8px); /* Desktop */
+    }
+    
+    /* Mobil-anpassning */
+    @media (max-width: 768px) {
+      .header-logo {
+        transform: scale(3.2) translateX(8px); /* Mindre på mobil */
+      }
+    }
+    
+    /* Extra små skärmar */
+    @media (max-width: 480px) {
+      .header-logo {
+        transform: scale(3.2) translateX(8px); /* Ännu mindre på små mobiler */
+      }
     }
 
-        /* Notifikation styling */
+    /* Mobilmeny fix - LÄGG TILL DETTA */
+    .mobile-menu {
+      z-index: 9999 !important;
+      pointer-events: auto !important;
+    }
+
+    /* Notifikation styling */
     .notification {
       position: fixed;
       top: 20px;
@@ -48,7 +68,7 @@
         <div class="flex items-center gap-2">
           <img src="tracka_img/tracka_uf_image.png" alt="Tracka UF" class="header-logo">
         </div>
-        <div class="hidden rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700 md:inline-flex items-center gap-1">
+        <div class="hidden rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700 lg:inline-flex items-center gap-1">
           <span class="h-1.5 w-1.5 rounded-full bg-cyan-500"></span>
           UF • Sundsvall
         </div>
@@ -73,8 +93,8 @@
       </a>
       
       <!-- Mobilmeny-knapp -->
-      <button class="md:hidden rounded-lg p-2 text-slate-600 hover:bg-slate-100 transition-colors" aria-label="Meny">
-        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <button class="md:hidden rounded-lg p-3 text-slate-600 hover:bg-slate-100 transition-colors flex items-center justify-center" aria-label="Meny" style="min-width: 44px; min-height: 44px;">
+        <svg class="h-6 w-6 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
@@ -500,62 +520,143 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
   <!-- Tom GDPR-ankare för länken i footern (om du vill lägga full policy separat) -->
   <section id="gdpr" class="hidden"></section>
 
-  <script>
-    // årtal
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // reveal
-    const io = new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show')}),{threshold:.12});
-    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
-    // mjuk scroll under header
-    (function(){
-      const header = document.querySelector('header');
-      const headerH = ()=> header? header.getBoundingClientRect().height : 64;
-      document.querySelectorAll('a[href^="#"]').forEach(a=>{
-        a.addEventListener('click', (e)=>{
-          const href = a.getAttribute('href');
-          if(!href || href === '#') return;
-          const t = document.querySelector(href);
-          if(!t) return;
+<script>
+    // Vänta tills DOM är laddad
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobilmeny toggle
+      const mobileMenuBtn = document.querySelector('button[aria-label="Meny"]');
+      const nav = document.querySelector('nav');
+      
+      if (mobileMenuBtn && nav) {
+        // Skapa mobilmeny
+        const mobileNav = document.createElement('div');
+        mobileNav.className = 'mobile-menu absolute top-full left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-slate-200/70 shadow-lg md:hidden hidden';
+        mobileNav.innerHTML = `
+          <div class="px-4 py-4 space-y-3">
+            <a href="#vad" class="block py-2 text-slate-600 hover:text-slate-900 transition-colors">Om Tracka</a>
+            <a href="#funktioner" class="block py-2 text-slate-600 hover:text-slate-900 transition-colors">Funktioner</a>
+            <a href="#team" class="block py-2 text-slate-600 hover:text-slate-900 transition-colors">Team</a>
+            <a href="#partners" class="block py-2 text-slate-600 hover:text-slate-900 transition-colors">Partners</a>
+            <a href="#kontakt" class="block py-2 text-slate-600 hover:text-slate-900 transition-colors">Kontakt</a>
+            <div class="pt-3 border-t border-slate-200">
+              <a href="#kontakt" class="block w-full rounded-xl bg-slate-900 px-4 py-3 text-center text-sm font-medium text-white hover:bg-slate-800 transition-colors">
+                Kom igång
+              </a>
+            </div>
+          </div>
+        `;
+        
+        // Lägg till mobilmeny efter headern
+        const header = document.querySelector('header');
+        header.style.position = 'relative';
+        header.appendChild(mobileNav);
+        
+        // Toggle-funktion
+        mobileMenuBtn.addEventListener('click', (e) => {
           e.preventDefault();
-          const top = t.getBoundingClientRect().top + window.scrollY - headerH() - 8;
-          window.scrollTo({top, behavior:'smooth'});
-          history.pushState(null,'',href);
+          console.log('Meny klickad!'); // För debugging
+          
+          const isHidden = mobileNav.classList.contains('hidden');
+          if (isHidden) {
+            mobileNav.classList.remove('hidden');
+            // Ändra hamburger-ikon till X
+            mobileMenuBtn.innerHTML = `
+              <svg class="h-6 w-6 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            `;
+          } else {
+            mobileNav.classList.add('hidden');
+            // Ändra tillbaka till hamburger-ikon
+            mobileMenuBtn.innerHTML = `
+              <svg class="h-6 w-6 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+              </svg>
+            `;
+          }
         });
-      });
-    })();
-
-    // kontaktformulär med snygg notifikation
-    const cform=document.getElementById('contactForm');
-    cform?.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      const submitBtn = cform.querySelector('button[type="submit"]');
-      const originalText = submitBtn.textContent;
-      
-      // Visa loading state
-      submitBtn.textContent = 'Skickar...';
-      submitBtn.disabled = true;
-      
-      const data=new FormData(cform);
-      try{
-        const res=await fetch(cform.action,{method:'POST',body:data,headers:{'Accept':'application/json'}});
-        if(res.ok){ 
-          showNotification('✅ Meddelandet skickat!', 'Vi återkommer inom 24 timmar.', 'success');
-          cform.reset(); 
-        } else{ 
-          showNotification('⚠️ Kunde inte skicka', 'Försök igen eller maila oss direkt.', 'error');
-        }
-      }catch{ 
-        showNotification('⚠️ Nätverksfel', 'Kontrollera anslutningen och försök igen.', 'error');
-      } finally {
-        // Återställ knapp
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
+        
+        // Stäng menyn när man klickar på en länk
+        mobileNav.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            mobileNav.classList.add('hidden');
+            mobileMenuBtn.innerHTML = `
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+              </svg>
+            `;
+          });
+        });
+        
+        // Stäng menyn när man klickar utanför
+        document.addEventListener('click', (e) => {
+          if (!header.contains(e.target)) {
+            mobileNav.classList.add('hidden');
+            mobileMenuBtn.innerHTML = `
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+              </svg>
+            `;
+          }
+        });
       }
+
+      // årtal
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // reveal
+      const io = new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show')}),{threshold:.12});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+      // mjuk scroll under header
+      (function(){
+        const header = document.querySelector('header');
+        const headerH = ()=> header? header.getBoundingClientRect().height : 64;
+        document.querySelectorAll('a[href^="#"]').forEach(a=>{
+          a.addEventListener('click', (e)=>{
+            const href = a.getAttribute('href');
+            if(!href || href === '#') return;
+            const t = document.querySelector(href);
+            if(!t) return;
+            e.preventDefault();
+            const top = t.getBoundingClientRect().top + window.scrollY - headerH() - 8;
+            window.scrollTo({top, behavior:'smooth'});
+            history.pushState(null,'',href);
+          });
+        });
+      })();
+
+      // kontaktformulär med snygg notifikation
+      const cform=document.getElementById('contactForm');
+      cform?.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const submitBtn = cform.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        
+        // Visa loading state
+        submitBtn.textContent = 'Skickar...';
+        submitBtn.disabled = true;
+        
+        const data=new FormData(cform);
+        try{
+          const res=await fetch(cform.action,{method:'POST',body:data,headers:{'Accept':'application/json'}});
+          if(res.ok){ 
+            showNotification('✅ Meddelandet skickat!', 'Vi återkommer inom 24 timmar.', 'success');
+            cform.reset(); 
+          } else{ 
+            showNotification('⚠️ Kunde inte skicka', 'Försök igen eller maila oss direkt.', 'error');
+          }
+        }catch{ 
+          showNotification('⚠️ Nätverksfel', 'Kontrollera anslutningen och försök igen.', 'error');
+        } finally {
+          // Återställ knapp
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+        }
+      });
     });
 
-    // Funktion för att visa notifikationer
+    // Funktion för att visa notifikationer (utanför DOMContentLoaded)
     function showNotification(title, message, type = 'success') {
       // Ta bort eventuell befintlig notifikation
       const existing = document.querySelector('.notification');
@@ -597,4 +698,3 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
   </script>
 </body>
 </html>
-
