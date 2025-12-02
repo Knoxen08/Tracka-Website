@@ -7,6 +7,17 @@
   <meta name="description" content="Tracka – svensk familjeapp för tryggare resor. Live-position, valfria hastighetsgränser, geofencing, hemkommen-notiser, offline-loggning och SOS." />
   <meta name="theme-color" content="#111827" />
   <link rel="icon" href="/favicon.ico" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JZXLZ844CX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-JZXLZ844CX');
+  </script>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html{scroll-behavior:smooth}
@@ -151,7 +162,7 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
           </div>
           <h2 class="text-3xl font-bold">Vad är Tracka?</h2>
           <p class="mt-4 text-lg text-slate-700">
-            En svensk familjeapp som ger enkel koll i vardagen: live-position och hastighet i realtid, notiser när barnet lämnar/kommer till platser du valt,
+            En svensk familjeapp som ger enkel koll i vardagen: live-position och hastighet i realtid, notiser når barnet lämnar/kommer till platser du valt,
             samt varningar om en valfri hastighetsgräns överskrids. Byggd för att skapa trygghet – med transparens och integritet.
           </p>
           <div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -403,7 +414,7 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
         </svg>
         Väntelista
       </div>
-      <h2 class="reveal text-3xl font-bold">Få besked när Tracka lanseras</h2>
+      <h2 class="reveal text-3xl font-bold">Få besked når Tracka lanseras</h2>
       <p class="reveal mt-2 max-w-3xl text-slate-700">Skriv upp dig på väntelistan så meddelar vi dig så fort appen är redo för nedladdning.</p>
 
       <div class="mt-8 grid gap-8 md:grid-cols-3">
@@ -597,7 +608,7 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
       </div>
       <div>
         <h3 class="text-lg font-semibold mb-3">Om Tracka UF</h3>
-        <p class="text-sm text-white/80">UF‑företag vid Västermalm Gymnasium i Sundsvall. Vi bygger teknik för tryggare ungdomsresor – med enkelhet och integritet som grund.</p>
+        <p class="text-sm text-white/80">UF-företag vid Västermalm Gymnasium i Sundsvall. Vi bygger teknik för tryggare ungdomsresor – med enkelhet och integritet som grund.</p>
       </div>
     </div>
     <div class="border-t border-white/10 py-4 text-center text-xs text-white/70">© <span id="year"></span> Tracka UF – Alla rättigheter förbehållna</div>
@@ -607,7 +618,7 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
   <section id="gdpr" class="hidden"></section>
 
 <script>
-  // Samlad, uppdaterad script-fil — körs när DOM är klar
+  // Samlad, uppdaterad script-fil — körs når DOM är klar
   document.addEventListener('DOMContentLoaded', () => {
     /* ---------------------------
        Mobilmeny (tillgänglig och stabil)
@@ -671,7 +682,7 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
         }
       });
 
-      // stäng när man klickar en länk
+      // stäng når man klickar en länk
       mobileNav.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
           mobileNav.classList.add('hidden');
@@ -679,7 +690,7 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
         });
       });
 
-      // stäng när man klickar utanför header
+      // stäng når man klickar utanför header
       document.addEventListener('click', (ev) => {
         if (!header.contains(ev.target)) {
           mobileNav.classList.add('hidden');
@@ -800,11 +811,11 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
           const email = (emailEl?.value || '').trim().toLowerCase();
 
           if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            showWaitMessage('Ange en giltig e‑postadress.');
+            showWaitMessage('Ange en giltig e-postadress.');
             return;
           }
           if (!consentEl?.checked) {
-            showWaitMessage('Du måste godkänna lagring av din e‑post.');
+            showWaitMessage('Du måste godkänna lagring av din e-post.');
             return;
           }
 
@@ -819,7 +830,7 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
             if (error) {
               console.error(error);
               showWaitMessage('Kunde inte spara just nu. Försök igen senare.');
-              showNotification('⚠️ Kunde inte spara', 'Kunde inte lägga till e‑posten i väntelistan.', 'error');
+              showNotification('⚠️ Kunde inte spara', 'Kunde inte lägga till e-posten i väntelistan.', 'error');
             } else {
               showWaitMessage('Tack! Vi skickar ett mejl vid lansering. 🎉', true);
               showNotification('✅ Tack!', 'Vi skickar ett mejl vid lansering. 🎉', 'success');
