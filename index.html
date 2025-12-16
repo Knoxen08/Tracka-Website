@@ -7,55 +7,69 @@
   <meta name="description" content="Tracka – svensk familjeapp för tryggare resor. Live-position, valfria hastighetsgränser, geofencing, hemkommen-notiser, offline-loggning och SOS." />
   <meta name="theme-color" content="#111827" />
   <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://challenges.cloudflare.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Google tag (gtag.js) -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-JZXLZ844CX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag(){dataLayer.push(arguments);} 
     gtag('js', new Date());
-
     gtag('config', 'G-JZXLZ844CX');
   </script>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html{scroll-behavior:smooth}
+    header nav, header nav a, header nav span {
+      font-family: 'Poppins', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+    }
+    header nav a {
+      color: #475569;
+      transition: color .15s ease, transform .12s ease;
+    }
+    header nav a:hover {
+      color: #0f172a;
+      transform: translateY(-1px);
+    }
+    .header-dark {
+      background-color: rgba(15,23,42,0.95);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .header-dark nav a,
+    .header-dark a {
+      color: rgba(255,255,255,0.92) !important;
+    }
     .reveal{opacity:0;transform:translateY(16px);transition:opacity .5s, transform .5s}
     .reveal.show{opacity:1;transform:none}
     .blob{background:radial-gradient(42% 58% at 10% 10%, rgba(14,165,233,.18), transparent 60%),
            radial-gradient(40% 50% at 90% 20%, rgba(59,130,246,.14), transparent 60%)}
     .card{box-shadow:0 2px 8px rgba(2,6,23,.04), 0 12px 24px -12px rgba(2,6,23,.12)}
-    
-    /* Logga styling för header */
     .header-logo {
       height: 32px;
       width: auto;
       object-fit: contain;
-      transform: scale(3.8) translateX(-8px); /* Desktop */
+      transform: scale(5.8) translateX(-8px) translateY(-0.5px);
     }
-    
-    /* Mobil-anpassning */
     @media (max-width: 768px) {
       .header-logo {
-        transform: scale(3.2) translateX(8px); /* Mindre på mobil */
+        transform: scale(3.2) translateX(8px);
       }
     }
-    
-    /* Extra små skärmar */
     @media (max-width: 480px) {
       .header-logo {
-        transform: scale(3.2) translateX(8px); /* Ännu mindre på små mobiler */
+        transform: scale(3.2) translateX(8px);
       }
     }
-
-    /* Mobilmeny fix - LÄGG TILL DETTA */
     .mobile-menu {
       z-index: 9999 !important;
       pointer-events: auto !important;
     }
-
-    /* Notifikation styling */
     .notification {
       position: fixed;
       top: 20px;
@@ -67,14 +81,24 @@
     .notification.show {
       transform: translateX(0);
     }
+    @media (min-width: 768px) {
+      header {
+        display: none !important;
+      }
+    }
+    @media (max-width: 767.98px) {
+      header {
+        display: block !important;
+      }
+    }
+    .gdpr-modal-backdrop { background-color: rgba(2,6,23,0.6); }
+    .gdpr-modal-card { max-width: 820px; width: 100%; }
   </style>
 </head>
 <body class="min-h-screen bg-white text-slate-900">
 
-  <!-- HEADER -->
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-sm" style="border-bottom: 2px solid rgba(30, 41, 59, 0.7);">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-      <!-- Logo med badge-stil -->
       <a href="#" class="flex items-center gap-3" aria-label="Tracka startsida">
         <div class="flex items-center gap-2">
           <img src="tracka_img/TrackaBla.png" alt="Tracka UF" class="header-logo">
@@ -84,8 +108,6 @@
           UF • Sundsvall
         </div>
       </a>
-      
-      <!-- Navigation -->
       <nav class="hidden items-center gap-4 md:flex">
         <a href="#vad" class="text-slate-600 hover:text-slate-900 transition-colors">Om Tracka</a>
         <span class="text-slate-400">•</span>
@@ -97,13 +119,7 @@
         <span class="text-slate-400">•</span>
         <a href="#kontakt" class="text-slate-600 hover:text-slate-900 transition-colors">Kontakt</a>
       </nav>
-      
-      <!-- CTA-knapp -->
-      <a href="#kontakt" class="hidden rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 transition-colors md:inline-block">
-        Kom igång
-      </a>
-      
-      <!-- Mobilmeny-knapp -->
+      <a href="#ladda-hem" class="hidden rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 transition-colors md:inline-block">Kom igång</a>
       <button class="md:hidden rounded-lg p-3 text-slate-600 hover:bg-slate-100 transition-colors flex items-center justify-center" aria-label="Meny" style="min-width: 44px; min-height: 44px;">
         <svg class="h-6 w-6 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
@@ -112,7 +128,6 @@
     </div>
   </header>
 
-  <!-- HERO: enkel, blickfång + chips i ren text -->
   <section class="relative overflow-hidden bg-slate-900 text-white">
     <div class="absolute inset-0 blob opacity-90"></div>
     <div class="relative mx-auto max-w-7xl px-4 py-24 md:py-32">
@@ -121,7 +136,7 @@
           <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 12 12">
             <circle cx="6" cy="6" r="6"/>
           </svg>
-          Familjetrygghet
+          Trygghet utan övervakning
         </div>
         <h1 class="text-4xl font-semibold leading-tight md:text-6xl">
           Frihet för ungdomar.
@@ -131,13 +146,10 @@
           Tracka är en svensk app som hjälper familjer att hålla koll på var deras barn befinner sig.
 Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan föräldrar känna sig trygga – utan att inkräkta på ungdomarnas frihet.
         </p>
-        
         <div class="mt-8 flex flex-wrap items-center gap-3">
           <a href="#funktioner" class="rounded-2xl bg-white px-6 py-3 font-medium text-slate-900 shadow hover:bg-slate-100 transition-colors">Se funktioner</a>
-          <a href="#kontakt" class="rounded-2xl bg-white/10 px-6 py-3 font-medium text-white ring-1 ring-white/20 hover:bg-white/15 transition-colors">Kom igång</a>
+          <a href="#ladda-hem" class="rounded-2xl bg-white/10 px-6 py-3 font-medium text-white ring-1 ring-white/20 hover:bg-white/15 transition-colors">Kom igång</a>
         </div>
-        
-        <!-- Enkel text-rad istället för stora boxar -->
         <p class="mt-8 text-sm text-white/70 flex items-center gap-3">
           <span>Live-position</span>
           <span class="text-white/40">•</span>
@@ -149,7 +161,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
     </div>
   </section>
 
-  <!-- VAD ÄR TRACKA (kort, konkret) -->
   <section id="vad" class="border-b border-slate-200 bg-white">
     <div class="mx-auto max-w-7xl px-4 py-16">
       <div class="grid gap-10 md:grid-cols-12">
@@ -186,7 +197,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
         </div>
         <div class="reveal md:col-span-5">
           <div class="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 p-6 shadow-sm mt-4 md:mt-12">
-
             <h3 class="text-lg font-semibold">Passar fler än A-traktorer</h3>
             <p class="mt-2 text-sm text-slate-700">
               Tracka fungerar för gång, cykel, moped, mopedbil och A-traktor – eller när barnen går själva till kompisar, skola och träning.
@@ -211,7 +221,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
     </div>
   </section>
 
-  <!-- FUNKTIONER: rent och tydligt (utan tunga boxar) -->
     <section id="funktioner" class="border-b border-slate-200 bg-slate-50">
     <div class="mx-auto max-w-7xl px-4 py-16">
       <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700">
@@ -224,7 +233,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
       <p class="reveal mt-2 max-w-3xl text-slate-700">Allt som behövs för tryggare resor – utan krångel.</p>
 
       <div class="mt-8 grid gap-6 md:grid-cols-2">
-        <!-- Kärna -->
         <div class="reveal rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div class="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
             <svg class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -257,7 +265,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
           </ul>
         </div>
 
-        <!-- Trygghet & Integritet -->
         <div class="reveal rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div class="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-green-50">
             <svg class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -290,14 +297,40 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
         </div>
       </div>
 
-      <!-- liten notisrad istället för stora "chips" -->
-      <p class="reveal mt-8 text-sm text-slate-600">
-        Batterismart uppdatering · iOS & Android · Familjekonton med flera profiler
-      </p>
+      <p class="reveal mt-8 text-sm text-slate-600"></p>
     </div>
   </section>
 
-  <!-- TEAM (ni + kort UF-förklaring) -->
+  <section id="ladda-hem" class="border-b border-slate-200 bg-white">
+    <div class="mx-auto max-w-7xl px-4 py-16">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700">
+        <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 12 12">
+          <circle cx="6" cy="6" r="6"/>
+        </svg>
+        Ladda hem Tracka
+      </div>
+      <h2 class="reveal text-3xl font-bold">Appen är på väg — snart i din appbutik</h2>
+      <p class="reveal mt-2 max-w-3xl text-slate-700">Tracka-appen utvecklas för både iOS och Android. Vi planerar en officiell lansering februari–mars 2026, med en beta-period före den publika releasen så att vi kan finslipa upplevelsen.</p>
+      <div class="mt-8 grid gap-8 md:grid-cols-3">
+        <div class="reveal rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 p-6 shadow-sm md:col-span-1">
+          <h3 class="text-lg font-semibold">Lansering</h3>
+          <p class="mt-2 text-sm text-slate-700">Preliminärt: februari–mars 2026. Vi siktar på samtidiga släpp i App Store och Google Play.</p>
+          <p class="mt-3 text-xs text-slate-500">Datum kan komma att justeras. Anmäl dig för uppdateringar och beta-inbjudningar.</p>
+        </div>
+        <div class="reveal card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:col-span-2">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h3 class="text-lg font-semibold">Vill du vara bland de första att testa Tracka?</h3>
+              <p class="mt-2 text-sm text-slate-700">Anmäl dig till vår väntelista och få möjlighet att delta i vår betaperiod. De som är med och testar appen från start får tidig tillgång, kan påverka utvecklingen med sin feedback och får full tillgång till appen helt kostnadsfritt när den officiellt lanseras.</p>
+              <p class="mt-3 text-xs text-slate-500">Vi skickar även ut beta-inbjudningar, uppdateringar och lanseringsnotiser till alla på väntelistan.</p>
+            </div>
+            <div class="flex flex-wrap gap-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="team" class="border-b border-slate-200 bg-white">
     <div class="mx-auto max-w-7xl px-4 py-16">
       <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700">
@@ -307,10 +340,7 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
         Teamet
       </div>
       <h2 class="reveal text-3xl font-bold">Tracka Team</h2>
-      <p class="reveal mt-3 max-w-3xl text-slate-700">
-        Tracka UF drivs av två elever på Västermalm Gymnasium i Sundsvall inom Ung Företagsamhet (UF).
-        UF betyder att vi startar och driver ett riktigt företag under ett läsår – från idé till produkt och kunder.
-      </p>
+      <p class="reveal mt-3 max-w-3xl text-slate-700">Tracka UF drivs av två elever på Västermalm Gymnasium i Sundsvall inom Ung Företagsamhet (UF). UF betyder att vi startar och driver ett riktigt företag under ett läsår – från idé till produkt och kunder.</p>
 
       <div class="mt-8 grid gap-6 md:grid-cols-2">
         <div class="reveal rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
@@ -345,7 +375,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
     </div>
   </section>
   
-  <!-- PARTNERS / SUPPORTERS (PNG-logogrid) -->
   <section id="partners" class="border-b border-slate-200 bg-slate-50">
     <div class="mx-auto max-w-7xl px-4 py-16">
       <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700">
@@ -357,8 +386,7 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
       <h2 class="reveal text-3xl font-bold">Supporters & samarbetspartners</h2>
       <p class="reveal mt-2 max-w-3xl text-slate-700">Tack till er som stöttar vår resa under UF-året och gör Tracka möjligt.</p>
 
-      <!-- Partner-grid med vita kort -->
-      <div class="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+  <div class="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         <a href="https://www.transistorsoft.com/" target="_blank" rel="noopener" class="reveal group">
           <div class="rounded-2xl border border-slate-200 bg-slate-800/80 p-4 shadow-sm transition-shadow hover:shadow-md">
             <img class="mx-auto h-16 w-auto object-contain" src="partners/partner1.png" alt="Partner 1">
@@ -386,8 +414,7 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
         </a>
       </div>
 
-      <!-- Info-box längst ner -->
-      <div class="reveal mt-8 rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 p-6 shadow-sm">
+  <div class="reveal mt-8 rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 p-6 shadow-sm">
         <div class="flex items-start gap-4">
           <div class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
             <svg class="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -418,7 +445,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
       <p class="reveal mt-2 max-w-3xl text-slate-700">Skriv upp dig på väntelistan så meddelar vi dig så fort appen är redo för nedladdning.</p>
 
       <div class="mt-8 grid gap-8 md:grid-cols-3">
-        <!-- Info kort -->
         <div class="reveal rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 p-6 shadow-sm md:col-span-1">
           <div class="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
             <svg class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -442,8 +468,7 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
           </ul>
         </div>
 
-        <!-- Formulär -->
-        <div class="reveal card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:col-span-2">
+  <div class="reveal card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:col-span-2">
           <form id="waitlistForm" class="space-y-4" novalidate>
             <div>
               <label for="waitEmail" class="mb-2 block text-sm font-medium">Din e-postadress</label>
@@ -455,6 +480,11 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
                 required
                 class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" 
               />
+            </div>
+
+            <div class="cf-turnstile"
+                 data-sitekey="0x4AAAAAACHDt7KMVFSpafD0"
+                 data-theme="light">
             </div>
 
             <div class="flex flex-col gap-4">
@@ -492,7 +522,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
     </div>
   </section>
 
-  <!-- KONTAKT (oförändrad struktur, bara lätt puts) -->
   <section id="kontakt" class="bg-white">
     <div class="mx-auto max-w-7xl px-4 py-16">
       <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700">
@@ -505,8 +534,7 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
       <p class="reveal mt-2 max-w-3xl text-slate-700">Frågor eller vill du snacka pilot? Maila oss – vi svarar oftast inom 24 timmar.</p>
 
       <div class="mt-8 grid gap-8 md:grid-cols-3">
-        <!-- Kontaktinfo som elegant kort -->
-        <div class="reveal rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 p-6 shadow-sm md:col-span-1">
+  <div class="reveal rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 p-6 shadow-sm md:col-span-1">
           <div class="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
             <svg class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
@@ -528,7 +556,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
             </li>
           </ul>
           
-          <!-- Social media länkar -->
           <div class="mt-4 pt-4 border-t border-slate-200">
             <p class="text-xs text-slate-600 mb-2">Följ oss:</p>
             <div class="flex gap-3">
@@ -542,8 +569,7 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
           </div>
         </div>
 
-        <!-- Kontaktformulär -->
-        <form id="contactForm" class="reveal card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:col-span-2" action="https://formspree.io/f/xrbyjjdq" method="POST">
+  <form id="contactForm" class="reveal card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:col-span-2" action="https://formspree.io/f/xrbyjjdq" method="POST">
           <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
             <svg class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
@@ -566,7 +592,13 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
               <input name="Telefonnummer" type="tel" placeholder="+46…" class="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" /></label>
             <label class="block md:col-span-2"><span class="mb-1 block text-sm font-medium">Meddelande</span>
               <textarea name="Meddelande" rows="5" placeholder="Kort om ärendet" class="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" required></textarea></label>
-            <div class="md:col-span-2 flex items-start gap-2 text-sm text-slate-700">
+            
+              <div class="cf-turnstile"
+     data-sitekey="0x4AAAAAACHDt7KMVFSpafD0"
+     data-theme="light">
+</div>
+            
+              <div class="md:col-span-2 flex items-start gap-2 text-sm text-slate-700">
               <input id="gdprc" type="checkbox" required class="mt-1 h-4 w-4 rounded border-slate-300" />
               <label for="gdprc">Jag godkänner att Tracka kontaktar mig i detta ärende.</label>
             </div>
@@ -581,7 +613,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
     </div>
   </section>
 
-  <!-- FOOTER (oförändrad) -->
   <footer class="border-t border-white/10 bg-[#1e293b] text-white">
     <div class="mx-auto max-w-7xl grid gap-10 px-6 py-14 md:grid-cols-3">
       <div>
@@ -614,21 +645,79 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
     <div class="border-t border-white/10 py-4 text-center text-xs text-white/70">© <span id="year"></span> Tracka UF – Alla rättigheter förbehållna</div>
   </footer>
 
-  <!-- Tom GDPR-ankare för länken i footern (om du vill lägga full policy separat) -->
-  <section id="gdpr" class="hidden"></section>
+  <div id="gdpr-modal" class="hidden fixed inset-0 z-50 gdpr-modal-backdrop flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="gdpr-title">
+    <div class="gdpr-modal-card bg-white rounded-2xl shadow-lg max-w-2xl w-full p-6 relative">
+      <button id="gdpr-close" class="absolute top-3 right-3 text-slate-500 hover:text-slate-900" aria-label="Stäng GDPR">✕</button>
+      <h3 id="gdpr-title" class="text-lg font-semibold">GDPR & Integritet</h3>
+      <div class="mt-4 text-sm text-slate-700" style="max-height:60vh;overflow:auto;">
+        <h4 class="font-semibold mt-3">Integritetspolicy för Tracka UF</h4>
+        <p class="mt-2">Leo Lembäck och Alfred Karlsson (”Tracka”, ”vi”, ”våra”, ”vårt” eller ”oss”) är personuppgiftsansvarig i enlighet med EU:s dataskyddsförordning <strong>General Data Protection Regulation (”GDPR”)</strong>. Om du har frågor om behandlingen av dina personuppgifter kan du kontakta oss via <a href="mailto:contact@tracka.se" class="text-sky-500 font-medium">contact@tracka.se</a>. Integritetspolicyn avser information om vår personuppgiftsbehandling i Tracka (”Appen”) och följer GDPR. Vi uppdaterar och ändrar informationen löpande.</p>
+
+        <h4 class="font-semibold mt-4">1. Vilka personuppgifter vi samlar in och för vilket syfte</h4>
+        <p class="mt-2">Personuppgifter är all information som direkt eller indirekt kan kopplas till en fysisk person. Det kan till exempel vara <strong>namn</strong>, <strong>e-post</strong> och <strong>platsinformation</strong>. Personuppgiftsbehandling är varje åtgärd som vidtas med personuppgifterna. För att en behandling ska vara laglig krävs att behandlingen stöds av en rättslig grund.</p>
+
+        <p class="mt-2">Nedan följer information om vilka personuppgifter vi behandlar, hur uppgifterna samlas in, för vilket syfte de samlas in, rättsliga grunden för personuppgiftsbehandlingen samt hur länge informationen sparas.</p>
+
+        <p class="mt-2">Vi behandlar följande personuppgifter för att vi ska kunna tillhandahålla Appen:</p>
+        <ul class="list-disc pl-6 mt-2">
+          <li>Namn</li>
+          <li>E-postadress</li>
+          <li>Lösenord</li>
+        </ul>
+
+        <p class="mt-2">Personuppgifterna samlas in direkt från användaren vid uppstart av användarkonto. Personuppgiftsbehandlingen är nödvändig för att uppfylla avtalet mellan oss och användaren. Personuppgifterna sparas så länge en registrerad har ett användarkonto.</p>
+
+        <p class="mt-2">För Ungdomskonton behandlar vi även användarens platsinformation från enheten där Appen är installerad. Användaren lämnar samtycke i Appen till att dennes platsinformation delas med Tracka och de som användaren väljer att dela sin platsinformation med. Användaren kan välja att dela sin platsinformation med andra konton i Appen. Användaren kan när som helst sluta att dela platsinformationen genom att stänga av funktionen i Appen. Uppgifterna sparas i <span class="text-sky-500 font-medium">30 dagar</span>.</p>
+
+        <h4 class="font-semibold mt-4">2. Dina rättigheter</h4>
+        <p class="mt-2">Enligt GDPR har du rätt till kontroll över dina personuppgifter och rätt att få information om oss hur vi behandlar dina uppgifter. Nedan kan du läsa om dina rättigheter.</p>
+
+        <h5 class="font-semibold mt-3">Rätt till information</h5>
+        <p class="mt-1">Du har rätt att få information om hur vi behandlar personuppgifter. Den informationen framgår av denna integritetspolicy.</p>
+
+        <h5 class="font-semibold mt-3">Rätt till tillgång</h5>
+        <p class="mt-1">Du har rätt att begära att få besked om Tracka behandlar personuppgifter om dig och i sådana fall få en kopia av dessa, ett så kallat registerutdrag, med information om vilka personuppgifter vi har om dig.</p>
+
+        <h5 class="font-semibold mt-3">Rätt att få din information raderad</h5>
+        <p class="mt-1">Du har rätt att under vissa omständigheter få dina personuppgifter raderade. Det kallas även rätten att bli bortglömd.</p>
+
+        <h5 class="font-semibold mt-3">Rätt till dataportabilitet</h5>
+        <p class="mt-1">Du har rätt att få tillgång till och flytta dina personuppgifter till annan mottagare. Detta innebär att du kan begära en kopia över de personuppgifter vi har om dig i ett maskinläsbart format.</p>
+
+        <h5 class="font-semibold mt-3">Rätt till rättelse</h5>
+        <p class="mt-1">Du har rätt att få felaktiga eller ofullständiga personuppgifter rättade.</p>
+
+        <h5 class="font-semibold mt-3">Rätt till begränsning av behandling</h5>
+        <p class="mt-1">Om du anser att personuppgifterna vi har om dig inte är korrekta, att vår behandling strider mot lag eller att vi inte behöver uppgifterna för ett specifikt syfte, har du rätt att begära att vi begränsar vår personuppgiftsbehandling.</p>
+
+        <h4 class="font-semibold mt-4">3. Mottagare av personuppgifter</h4>
+        <p class="mt-2">Vi kan komma att dela dina personuppgifter till leverantörer som Tracka anlitar för bland annat lagring, utveckling och optimering av Appen. Dessa mottagare har endast rätt att behandla personuppgifter för Tracka:s räkning i samband med utförande av tjänst. Tracka vidtar rimliga åtgärder för att säkerställa att mottagare av personuppgifter behandlar uppgifter säkert och med en adekvat skyddsnivå. För tillfället är <span class="font-medium">Appwrite</span> mottagare av personuppgifter.</p>
+
+        <h4 class="font-semibold mt-4">4. Överföring av personuppgifter utanför EU/EES</h4>
+        <p class="mt-2">Vi strävar efter att i första hand behandla dina personuppgifter inom EU/EES. Om det däremot inte går kan vi komma att överföra dina personuppgifter till ett land utanför EU/EES. Vid en överföring vidtas lämpliga tekniska och organisatoriska skyddsåtgärder för att säkerställa en adekvat skyddsnivå.</p>
+
+        <h4 class="font-semibold mt-4">5. Hur dina personuppgifter skyddas</h4>
+        <p class="mt-2">Vi skyddar dina personuppgifter genom att vidta lämpliga organisatoriska och tekniska säkerhetsåtgärder, bland annat genom multifaktorautentisering.</p>
+
+        <h4 class="font-semibold mt-4">6. Klagomål</h4>
+        <p class="mt-2">Om du har synpunkter på vår behandling av personuppgifter kan du vända dig till Integritetsskyddsmyndigheten (IMY). Läs mer på <a href="https://www.imy.se" target="_blank" class="text-sky-500 font-medium">www.imy.se</a>.</p>
+
+        <h4 class="font-semibold mt-4">Väntelistan</h4>
+        <p class="mt-2">Genom att skriva upp dig på väntelistan samtycker du till att Tracka får skicka nyhetsbrev till den angivna e-postadressen. Uppgifterna kommer inte att användas för något annat ändamål. Samtycket kan när som helst återkallas. För mer information, se vår integritetspolicy.</p>
+      </div>
+      <div class="mt-6 text-right">
+        <button id="gdpr-close-2" class="rounded-xl border border-slate-300 px-4 py-2 font-medium hover:bg-slate-50">Stäng</button>
+      </div>
+    </div>
+  </div>
 
 <script>
-  // Samlad, uppdaterad script-fil — körs når DOM är klar
   document.addEventListener('DOMContentLoaded', () => {
-    /* ---------------------------
-       Mobilmeny (tillgänglig och stabil)
-    ----------------------------*/
     const mobileMenuBtn = document.querySelector('button[aria-label="Meny"]');
     const header = document.querySelector('header');
     const nav = document.querySelector('nav');
 
     if (mobileMenuBtn && header && nav) {
-      // skapa mobilmeny om inte redan finns
       let mobileNav = header.querySelector('.mobile-menu');
       if (!mobileNav) {
         mobileNav = document.createElement('div');
@@ -641,9 +730,7 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
             <a href="#partners" class="block py-2 text-slate-600 hover:text-slate-900 transition-colors">Partners</a>
             <a href="#kontakt" class="block py-2 text-slate-600 hover:text-slate-900 transition-colors">Kontakt</a>
             <div class="pt-3 border-t border-slate-200">
-              <a href="#kontakt" class="block w-full rounded-xl bg-slate-900 px-4 py-3 text-center text-sm font-medium text-white hover:bg-slate-800 transition-colors">
-                Kom igång
-              </a>
+              <a href="#ladda-hem" class="block w-full rounded-xl bg-slate-900 px-4 py-3 text-center text-sm font-medium text-white hover:bg-slate-800 transition-colors">Kom igång</a>
             </div>
           </div>
         `;
@@ -651,7 +738,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
         header.appendChild(mobileNav);
       }
 
-      // säker toggle
       const setHamburgerIcon = (size = 6) => {
         mobileMenuBtn.innerHTML = `
           <svg class="h-${size} w-${size} pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -667,7 +753,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
         `;
       };
 
-      // init icon
       setHamburgerIcon(5);
 
       mobileMenuBtn.addEventListener('click', (e) => {
@@ -682,7 +767,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
         }
       });
 
-      // stäng når man klickar en länk
       mobileNav.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
           mobileNav.classList.add('hidden');
@@ -690,7 +774,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
         });
       });
 
-      // stäng når man klickar utanför header
       document.addEventListener('click', (ev) => {
         if (!header.contains(ev.target)) {
           mobileNav.classList.add('hidden');
@@ -699,27 +782,16 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
       });
     }
 
-    /* ---------------------------
-       Årtal (footer)
-    ----------------------------*/
     const yearEl = document.getElementById('year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-    /* ---------------------------
-       Reveal (intersection observer)
-    ----------------------------*/
     try {
       const io = new IntersectionObserver((entries) => {
         entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
       }, { threshold: 0.12 });
       document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-    } catch (err) {
-      // ignore on older browsers
-    }
+    } catch (err) {}
 
-    /* ---------------------------
-       Mjuk scroll (under header)
-    ----------------------------*/
     (function() {
       const headerEl = document.querySelector('header');
       const headerH = () => headerEl ? headerEl.getBoundingClientRect().height : 64;
@@ -737,9 +809,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
       });
     })();
 
-    /* ---------------------------
-       Kontaktformulär (finns på sidan)
-    ----------------------------*/
     const cform = document.getElementById('contactForm');
     if (cform) {
       cform.addEventListener('submit', async (e) => {
@@ -747,6 +816,12 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
         const submitBtn = cform.querySelector('button[type="submit"]');
         const originalText = submitBtn ? submitBtn.textContent : '';
         if (submitBtn) { submitBtn.textContent = 'Skickar...'; submitBtn.disabled = true; }
+
+        const tsToken = cform.querySelector('input[name="cf-turnstile-response"]')?.value;
+        if (!tsToken) {
+          showNotification('⚠️ Verifiering saknas', 'Bekräfta att du inte är en bot.', 'error');
+          return;
+        }
 
         const data = new FormData(cform);
         try {
@@ -765,13 +840,8 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
       });
     }
 
-    /* ---------------------------
-       Väntelista / Supabase (matchar waitlist-form)
-    ----------------------------*/
-    // Kör bara om formuläret finns på sidan
     const waitForm = document.getElementById('waitlistForm');
     if (waitForm) {
-      // dynamiskt import om module inte redan laddats tidigare
       (async () => {
         let createClient;
         try {
@@ -819,9 +889,21 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
             return;
           }
 
+          const tsToken = waitForm.querySelector('input[name="cf-turnstile-response"]')?.value;
+          if (!tsToken) {
+            showWaitMessage('Verifiera att du inte är en bot (Turnstile).');
+            return;
+          }
+
           if (btn) { btn.disabled = true; btn.dataset.orig = btn.textContent; btn.textContent = 'Sparar...'; }
 
-          const payload = { email, consent_at: new Date().toISOString(), user_agent: navigator.userAgent || null };
+          const payload = {
+            email,
+            consent_at: new Date().toISOString(),
+            user_agent: navigator.userAgent || null,
+            turnstile_token: tsToken,
+          };
+
           const ip = await getIp();
           if (ip) payload.ip = ip;
 
@@ -849,9 +931,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
     }
   });
 
-  /* ---------------------------
-     Notifikationer (kan anropas globalt)
-  ----------------------------*/
   function showNotification(title, message, type = 'success') {
     const existing = document.querySelector('.notification');
     if (existing) existing.remove();
@@ -876,7 +955,6 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
     `;
     document.body.appendChild(notification);
 
-    // visa animation
     requestAnimationFrame(() => {
       notification.style.transform = 'translateY(0)';
     });
@@ -889,6 +967,39 @@ Med live-position, hastighetsvarningar, geofencing och hemkomstnotiser kan för�
       setTimeout(() => notification.remove(), 300);
     }, 5000);
   }
+</script>
+<script>
+  (function(){
+    const modal = document.getElementById('gdpr-modal');
+    if (!modal) return;
+
+    const openLinks = document.querySelectorAll('a[href="#gdpr"]');
+    const closeBtns = modal.querySelectorAll('#gdpr-close, #gdpr-close-2');
+
+    function openModal(e){
+      if (e) e.preventDefault();
+      modal.classList.remove('hidden');
+      modal.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+      const fb = modal.querySelector('button, a');
+      if (fb) fb.focus();
+    }
+
+    function closeModal(){
+      modal.classList.add('hidden');
+      modal.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+
+    openLinks.forEach(a => a.addEventListener('click', openModal));
+    closeBtns.forEach(b => b.addEventListener('click', closeModal));
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+  })();
 </script>
 </body>
 </html>
